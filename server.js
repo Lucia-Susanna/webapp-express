@@ -1,4 +1,6 @@
 const express = require('express')
+const errorsHandler = require('./middleware/errorsHandler')
+const notfound = require('./middleware/notFound')
 
 
 const app = express()
@@ -12,6 +14,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/movies', moviesRouter)
+
+app.use(errorsHandler)
+app.use(notfound)
 
 app.listen(port, () => {
   console.log(`sono in ascolto alla porta ${port}`);
