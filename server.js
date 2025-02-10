@@ -1,12 +1,13 @@
 const express = require('express')
+require('dotenv').config()
 const errorsHandler = require('./middleware/errorsHandler')
 const notfound = require('./middleware/notFound')
 
-
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 const moviesRouter = require('./routes/movies')
 
+app.use(express.static('public'))
 app.use(express.json())
 
 app.get('/', (req, res) => {
