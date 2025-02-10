@@ -1,11 +1,41 @@
 const connection = require('../data/db')
 
 const index = (req, res) => {
-  res.send('lista dei film')
+
+  //compongo la query
+  const sql = 'SELECT * FROM movies'
+
+  // connessione al database
+  connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: 'query fallita' })
+    res.json(results)
+  })
+
 }
 
 const show = (req, res) => {
-  res.send(`mostro il dettaglio del film con id ${req.params.id}`)
+  const id = req.params.id
+  const sql = 'SELECT * FROM movies WHERE id=?'
+  const reviewsSql = 'SELECT * FROM reviews WHERE movie_id = ?'
+
+  connection.query(sql, [id], (err, results) => {
+
+    if (err) return res.status(500).json({ error: 'query fallita' })
+    if (results.length === 0) return res.status(404).json({ error: 'film non trovato' })
+
+    const movie = results[0];
+
+
+    connection.query(reviewsSql, [id], (err, reviewsResults) => {
+      if (err) return res.status(500).json({ error: 'query fallita' })
+      if (results.length === 0) return res.status(404).json({ error: 'film non trovato' })
+
+      movie.reviews = reviewsResults
+      res.json(movie)
+    })
+
+
+  })
 }
 
 module.exports = {
