@@ -1,5 +1,7 @@
 const express = require('express')
 require('dotenv').config()
+
+const cors = require('cors')
 const errorsHandler = require('./middleware/errorsHandler')
 const notfound = require('./middleware/notFound')
 
@@ -9,6 +11,10 @@ const moviesRouter = require('./routes/movies')
 
 app.use(express.static('public'))
 app.use(express.json())
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}))
 
 app.get('/', (req, res) => {
   res.send('server funzionante')
